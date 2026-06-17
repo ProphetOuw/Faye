@@ -8,16 +8,8 @@ local m = {
     BillboardGui = function(Instance)
         Instance.Size = UDim2.fromOffset(100,100);
     end;
-    VideoFrame = function(Instance)
-        Instance.BackgroundColor3 = Color3.new(1,1,1);
-        Instance.Size = UDim2.fromOffset(100,100);
-        Instance.BorderSizePixel = 0;Instance.BorderColor3 = Color3.new(0,0,0);
-    end;
-    ViewportFrame = function(Instance)
-        Instance.BackgroundColor3 = Color3.new(1,1,1);
-        Instance.Size = UDim2.fromOffset(100,100);
-        Instance.BorderSizePixel = 0;Instance.BorderColor3 = Color3.new(0,0,0);
-    end;
+    
+    
     TextLabel = function(Instance)
         Instance.BackgroundColor3 = Color3.new(1,1,1);
         Instance.Size = UDim2.fromOffset(100,100);
@@ -30,16 +22,8 @@ local m = {
         Instance.BorderSizePixel = 0;Instance.BorderColor3 = Color3.new(0,0,0);
         Instance.Text = "";
     end;
-    ImageLabel = function(Instance)
-        Instance.BackgroundColor3 = Color3.new(1,1,1);
-        Instance.Size = UDim2.fromOffset(100,100);
-        Instance.BorderSizePixel = 0;Instance.BorderColor3 = Color3.new(0,0,0);
-    end;
-    ImageButton = function(Instance)
-        Instance.BackgroundColor3 = Color3.new(1,1,1);
-        Instance.Size = UDim2.fromOffset(100,100);
-        Instance.BorderSizePixel = 0;Instance.BorderColor3 = Color3.new(0,0,0);
-    end;
+    
+    
     TextBox = function(Instance)
         Instance.BackgroundColor3 = Color3.new(1,1,1);
         Instance.Size = UDim2.fromOffset(100,100);
@@ -53,4 +37,10 @@ local m = {
         Instance.ScrollBarImageColor3 = Color3.new();
     end;
 }
+
+m.VideoFrame = m.Frame;
+m.ViewportFrame = m.Frame;
+m.ImageLabel = m.Frame
+m.ImageButton = m.Frame
+m.CanvasGroup = m.Frame
 return m

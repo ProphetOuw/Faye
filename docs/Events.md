@@ -23,11 +23,11 @@ The first parameter of the events is always the Instance being worked on and fol
 Yes i am using an event reserved for parts, you can create anything with Faye.
 :::
 Utilities help you implement special properties, reactivity, and animations to your Faye Instances. Utilities also work on Instances that are Configured using the Configure function.
-### MethodSignaled Utility
-The **MethodSignaled** utility allows you to listen to complex instance events like, GetAttributeChangedSignal, GetPropertyChangedSignal, etc...
+### GetSignal Utility
+The **GetSignal** utility allows you to listen to complex instance events like, GetAttributeChangedSignal, GetPropertyChangedSignal, etc...
 ```lua
 {
-    [Thread:MethodSignaled("GetPropertyChangedSignal","Size")] = function(Entity)
+    [Thread:GetSignal("GetPropertyChangedSignal","Size")] = function(Entity)
         local Size = Entity.AbsoluteSize
         print(Size)
     end,
@@ -35,11 +35,11 @@ The **MethodSignaled** utility allows you to listen to complex instance events l
 ```
 Its important to remember that complex roblox instance events don't return any parameters, so the only one that will be there is the one Faye automatically adds there which is the Entity in the first parameter position.
 
-#### More MethodSignaled examples
+#### More GetSignal examples
 ```lua
 -- Listen to attribute changes
 Thread:Create "Frame" {
-    [Thread:MethodSignaled("GetAttributeChangedSignal", "CustomData")] = function(Entity)
+    [Thread:GetSignal("GetAttributeChangedSignal", "CustomData")] = function(Entity)
         local data = Entity:GetAttribute("CustomData")
         print("CustomData changed to:", data)
     end
@@ -47,7 +47,7 @@ Thread:Create "Frame" {
 
 -- Run callback on initialization too
 Thread:Create "Frame" {
-    [Thread:MethodSignaled("GetPropertyChangedSignal", "AbsoluteSize", true)] = function(Entity)
+    [Thread:GetSignal("GetPropertyChangedSignal", "AbsoluteSize", true)] = function(Entity)
         -- The third parameter `true` makes it run immediately on creation
         print("Size is:", Entity.AbsoluteSize)
     end

@@ -98,7 +98,7 @@ local m = {
 			Utility.Connect(Signal,func,Thread)
 		end
 	end,
-	MethodSignaled = require(script.MethodSignaled);
+	GetSignal = require(script.GetSignal);
 	EventCompiler = function(Entity, Index, Value, Compile)
 		local Thread = Entity.InnerThread or Entity.Thread;
 		local Instance = Entity.Instance;

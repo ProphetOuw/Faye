@@ -161,7 +161,7 @@ export type Thread = {
     Schedule: (self: Thread,Time: number?,Item: any,...any) -> any;
     Signal: (self: Thread, Connections: RBXScriptSignal | {RBXScriptSignal}, func: ((...any) -> ())?) -> Signal;
     SignalState: (self: Thread, Connections: RBXScriptSignal | {RBXScriptSignal}, func: ((...any) -> ())?) -> Signal;
-	MethodSignaled: (self: Thread, Method: string, Index: string,RunOnInitialization: boolean?) -> ();
+	GetSignal: (self: Thread, Method: string, Index: string,RunOnInitialization: boolean?) -> ();
 	Spawn: (self: Thread, func: (...any) -> (),...any) -> ();
 	Defer: (self: Thread, func: (...any) -> (),...any) -> ();
 	Delay: (self: Thread,time: number, func: (...any) -> (),...any) -> ();

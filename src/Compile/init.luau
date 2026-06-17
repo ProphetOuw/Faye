@@ -13,7 +13,7 @@ local tablestr,numberstr,functionstr,RBXScriptSignalstr,stringstr = "table","num
 local OnChangedInitstr,OnChangedstr,Valuestr,Instancestr,Addstr,valuebasestr = "OnChangedInit","OnChanged","Value","Instance","Add","ValueBase"
 local Aftertxt,BeforeTxt = "After","Before"
 local UseCompile = require(script.Parent.Misc.UseCompilePassRecursiveness)
-local MethodSignaledstr = "MethodSignaled"
+local GetSignalstr = "GetSignal"
 -- Caches whether `<ClassName>.<propName>` resolves to an RBXScriptSignal so we don't
 -- pay a real Roblox property read on every unknown key in the slow path.
 local signalCache = {}
@@ -45,7 +45,7 @@ local function Recursive(Entity: {Instance: any, Thread: any, InnerThread: any},
         end
         local compilerFunc = (toi ~= tablestr and Compilers[i]) or nil
         if compilerFunc and not banned[i] then
-            if i == MethodSignaledstr then
+            if i == GetSignalstr then
                 if deferredSignals == nil then deferredSignals = {} end
                 tins(deferredSignals, {i, v})
             else
@@ -116,12 +116,12 @@ local function Recursive(Entity: {Instance: any, Thread: any, InnerThread: any},
             end
         end
     end
-    -- Compile OnChanged/OnChangedInit/MethodSignaled signals last
+    -- Compile OnChanged/OnChangedInit/GetSignal signals last
     if deferredSignals ~= nil then
         for _, entry in deferredSignals do
             local i, v = entry[1], entry[2]
-            if i == MethodSignaledstr then
-                Compilers.MethodSignaled(Entity, i, v, Recursive)
+            if i == GetSignalstr then
+                Compilers.GetSignal(Entity, i, v, Recursive)
             else
                 local onChangedIndex = sf(i, OnChangedstr, 1, true)
                 local prop = sb(i, 1, onChangedIndex - 1)

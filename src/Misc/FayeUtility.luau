@@ -96,7 +96,7 @@ end
 local ValueClasses = require(script.Parent.ValueClasses)
 function m.GetValue(Info: Types.Value)
     if Info == nil then return end;
-    if Info.__type ~= nil and ValueClasses[Info.__type] then
+    if m.tof(Info) == m.tabletxt and Info.__type ~= nil and ValueClasses[Info.__type] then
         return m.GetValue(Info:Get())
     else
         return Info

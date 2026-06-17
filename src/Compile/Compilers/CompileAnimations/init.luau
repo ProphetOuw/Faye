@@ -208,7 +208,7 @@ return function(Entity: Types.FayeInstance, Index: string, Anim: Types.Animation
                 else
                     if Anim.FirstGoal and not UsedFirstGoal then
                         --| first goal
-                        Goal = Anim.FirstGoal
+                        Goal = Utility.GetValue(Anim.FirstGoal)
                         UsedFirstGoal = true;
                         --|>
                     end
@@ -218,10 +218,10 @@ return function(Entity: Types.FayeInstance, Index: string, Anim: Types.Animation
                         end
                         local Initial = nil;
                         if Anim.From ~= nil and not UsedFrom then
-                            Initial = Anim.From;
+                            Initial = Utility.GetValue(Anim.From);
                             UsedFrom = true;
                         elseif Anim.AlwaysFrom then
-                            Initial = Anim.AlwaysFrom;
+                            Initial = Utility.GetValue(Anim.AlwaysFrom);
                         end
                         Delete(true,true)
                         Anim.IsPlaying = true;

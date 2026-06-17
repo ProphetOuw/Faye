@@ -293,9 +293,9 @@ local SignalState = require(script.SignalState)
 function mt:SignalState(Connections: RBXScriptSignal | {RBXScriptSignal},func: (...any) -> ()?)
     return SignalState(Connections, func,self);
 end
-local MethodSignaled = require(script.MethodSignaled)
-function mt:MethodSignaled(Method: string, Index: string,RunOnInitialization: boolean?)
-    return MethodSignaled(Method,Index,RunOnInitialization, self);
+local GetSignal = require(script.GetSignal)
+function mt:GetSignal(Method: string, Index: string,RunOnInitialization: boolean?)
+    return GetSignal(Method,Index,RunOnInitialization, self);
 end
 local LoadAnimation = require(script.LoadAnimation)
 function mt:LoadAnimation(Entity: Instance,Goals: any, Info: (Types.Info | Types.SpringInfo)?)
@@ -414,7 +414,7 @@ return {
     YieldSafe = YieldSafe;
     Signal = Signal;
     SignalState = SignalState;
-    MethodSignaled = MethodSignaled;
+    GetSignal = GetSignal;
     LoadAnimation = LoadAnimation;
     ModifyAnimation = ModifyAnimation;
     CloneAnimation = CloneAnimation;
