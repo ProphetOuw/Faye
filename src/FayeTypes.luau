@@ -180,6 +180,12 @@ export type Properties = {
 	GroupColor3: any, -- Color3 value that tints all descendant GuiObjects
 	GroupTransparency: any, -- Number (0-1) that sets transparency for all descendants
 	AutoLocalize: any,
+	BlurRadius: any,
+	Spread: any,
+	BottomLeftRadius: any,
+	BottomRightRadius: any,
+	TopLeftRadius: any,
+	TopRightRadius: any,
 	SizeOffset: any,
 	RootLocalizationTable: any,
 	ZIndexBehavior: any,
