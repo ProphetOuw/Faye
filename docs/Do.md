@@ -43,6 +43,10 @@ Thread:Create "TextLabel" {
 }
 ```
 <mark>**Everything created within the State utility must be created using the InnerThread provided on the 2nd parameter**</mark> otherwise it won't clean previous sessions properly.
+
+:::warning
+If the parent instance has `OnClean` or `CleanDelay`, instances built by State are destroyed instantly when cleanup starts - they don't wait for the parent's exit animation. Give the topmost instance you return its own `CleanDelay` to keep it visible during the parent's exit. See [Cleanup](/docs/Cleanup#iterate-and-state-children-during-cleanup) for details. (`Do` is unaffected since it doesn't own session instances.)
+:::
 ## Reactive
 As you have probably already guessed, State, and Do only work in props tables, if u want a similar system to use outside of a props table you can use the **Reactive** utility.
 ```lua

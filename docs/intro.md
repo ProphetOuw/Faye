@@ -28,6 +28,21 @@ Thread:Create("Frame") {
     ...
 }
 ```
+### Class Name Autocomplete
+Create suggests every creatable Roblox class name as you type. In Roblox Studio this works out of the box. In VS Code (luau-lsp), the editor doesn't automatically show suggestions inside strings, so either press **Ctrl+Space** inside the quotes or enable string suggestions in your `.vscode/settings.json`:
+```json
+{
+    "[luau]": {
+        "editor.quickSuggestions": {
+            "other": "on",
+            "comments": "off",
+            "strings": "on"
+        }
+    }
+}
+```
+Any string is still accepted, so class names that aren't in the suggestion list (like ones Roblox added recently) will still work.
+
 The first element created using Thread:Create must have a Parent property inside its props table, its children will automatically have it as a parent in the roblox tree.
 ```lua
 Thread:Create "Frame" {

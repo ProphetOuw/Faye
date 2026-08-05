@@ -7,6 +7,33 @@ local tof = typeof
 local tr = table.remove
 local tf = table.find
 local tins = table.insert
+local functiontxt = "function"
+local tabletxt = "table"
+local animtxt = "Animation"
+local lerptxt = "Lerp"
+--Animations/Lerps in a direct props table were registered on the creating thread at build
+--time; mark them so that thread's cleanup sweep skips them - they now belong to the
+--InnerThread compile and would otherwise be killed mid exit-animation
+local function MarkCleanDescriptors(t)
+	for _, v in pairs(t) do
+		if tof(v) == tabletxt then
+			local vt = v.__type
+			if vt == animtxt or vt == lerptxt then
+				v.__Destroying = true
+			elseif vt == nil then
+				MarkCleanDescriptors(v)
+			end
+		end
+	end
+end
+--OnClean/CleanFunction accept a props table directly or a function returning one
+local function RunClean(f, Thread, Entity)
+	if tof(f) == tabletxt then
+		MarkCleanDescriptors(f)
+		return f
+	end
+	return f(Thread, Entity)
+end
 local mt = { __type = "Instance" }
 mt.__index = mt
 --[=[
@@ -189,7 +216,7 @@ function mt:Compile()
 					if self.Cache ~= nil then
 						self:ClearCache()
 					end
-					local res1,res2 = f(InnerThread, Instance)
+					local res1,res2 = RunClean(f, InnerThread, Instance)
 					repCompile(res1,res2,self)
 					removefunc(connected,cf)
 					f = nil
@@ -246,9 +273,6 @@ end
     @within FayeInstance
     Destroys the instance.
 ]=]
-local functiontxt = "function"
-local tabletxt = "table"
-
 local CleanPortion = require(script.Parent.CleanPortion)
 --|<
 function mt:ClearCache()
@@ -332,7 +356,7 @@ function mt:Destroy()
 
 	--| clean function
 	if self.CleanFunction ~= nil then
-		local res1,res2 = self.CleanFunction(self.InnerThread or self.Thread, self.Instance)
+		local res1,res2 = RunClean(self.CleanFunction, self.InnerThread or self.Thread, self.Instance)
 		repCompile(res1,res2,self)
 	end
 	--|> clean function
@@ -344,7 +368,7 @@ function mt:Destroy()
 		else
 			table.insert(self.InnerThread, self.Instance)
 		end
-		local res1,res2 = self.OnClean(self.InnerThread, self.Instance)
+		local res1,res2 = RunClean(self.OnClean, self.InnerThread, self.Instance)
 		repCompile(res1,res2,self)
 		if self.InnerThread ~= nil then
 			if self.InnerThread.AnimationsAmount == nil or self.InnerThread.AnimationsAmount <= 0 then

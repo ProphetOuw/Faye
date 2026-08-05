@@ -47,6 +47,21 @@ The callback receives:
 - **InnerThread**: A dedicated thread for cleanup operations
 - **Entity**: The Roblox Instance being cleaned
 
+### Passing a props table directly
+If you don't need the callback parameters, both `OnClean` and `CleanFunction` also accept a props table directly - it is compiled at cleanup exactly like a returned one:
+
+```lua
+Thread:Create "Frame" {
+    Parent = parent,
+
+    OnClean = {
+        BackgroundTransparency = Thread:Animation(1, Faye.Info(0.3))
+    }
+}
+```
+
+Note that the table's contents are built when the instance is created, not at cleanup - use the function form if a value has to be computed at cleanup time (for example reading the Entity's current state).
+
 ## CleanDelay
 `CleanDelay` delays the destruction of an instance by a specified time (in seconds).
 
@@ -120,6 +135,35 @@ When a thread is destroyed:
 4. **Instance cleanup** runs (`CleanFunction` if present, then `OnClean` if present)
 5. For `OnClean` without `CleanDelay`: waits for all InnerThread animations to finish, then destroys
 6. For `CleanDelay`: waits the delay duration, then destroys
+
+## Iterate and State children during cleanup
+`Iterate`, `AdvancedIterate` and `State` don't register their teardown on the instance's InnerThread - <mark>they walk up the `ParentThread` chain and register on the nearest ancestor thread with cleanup responsibility</mark>. (`Do` is unaffected - it runs on the parent's thread and doesn't own session instances.) This has an important consequence:
+
+When a parent instance has `OnClean` or `CleanDelay`, the items built by an `Iterate` or `State` inside it are <mark>destroyed instantly the moment cleanup starts</mark> - they do **not** inherit the parent's exit animation or delay. The parent frame will fade out with its list items already gone.
+
+To keep them on screen during the parent's exit, give the first ancestor each callback creates (the topmost instance it returns) its own `CleanDelay` matching the parent's exit duration, or its own `OnClean`:
+
+```lua
+Thread:Create "Frame" {
+    Parent = parent,
+
+    OnClean = function(InnerThread, Entity)
+        return {
+            BackgroundTransparency = InnerThread:Animation(1, Faye.Info(0.3))
+        }
+    end,
+
+    Thread:Iterate(Items, function(Index, Value, InnerThread, Entity)
+        return InnerThread:Create "TextLabel" {
+            Text = Value,
+            Parent = Entity,
+            CleanDelay = 0.3 -- keeps this item alive while the parent fades out
+        }
+    end)
+}
+```
+
+Only the topmost instance of each item needs it - its descendants live under it in the Roblox tree, so they disappear together with it.
 
 ## Best Practices
 

@@ -6,13 +6,15 @@ local mt = require(script.Parent.Misc.FayeInstance)
 --[=[
     @method Create
     @within Thread
-    @param ClassName string
+    @param ClassName CreatableClassName | string
     @return (props: PropertyTypes.Property) -> Create
     [Creates a new instance object.](/docs/Instancing/Create)
 ]=]
 local functiontxt,tabletxt,cleandelaytxt,parenttxt,numbertxt,instancetxt =
 	"function", "table", "CleanDelay", "Parent", "number","Instance"
-return function(ClassName: string, Thread: { Add: (self: {}, Entity: any) -> () }?) : (props: Types.Properties) -> Types.FayeInstance
+type CreateThread = { Add: (self: {}, Entity: any, IsPriority: boolean?) -> () }
+-- CreatableClassName drives editor suggestions; the string half keeps arbitrary class names valid
+return function(ClassName: Types.CreatableClassName | string, Thread: CreateThread?) : (props: Types.Properties) -> Types.FayeInstance
 	return function(props: Types.Properties)
 		local Object = Instance.new(ClassName)
 		if Defaults[ClassName] ~= nil then

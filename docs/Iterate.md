@@ -29,6 +29,10 @@ The callback function receives:
 
 You can return properties to compile, a single instance, or a table of instances.
 
+:::warning
+If the parent instance has `OnClean` or `CleanDelay`, items built by Iterate are destroyed instantly when cleanup starts - they don't wait for the parent's exit animation. Give the topmost instance you return its own `CleanDelay` to keep it visible during the parent's exit. See [Cleanup](/docs/Cleanup#iterate-and-state-children-during-cleanup) for details.
+:::
+
 ### Iterating over numbers
 You can also iterate over a number to create N items:
 ```lua

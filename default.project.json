@@ -12,6 +12,9 @@
             "$path": "Packages"
           }
         }
+      },
+      "Test": {
+        "$path": "Tests"
       }
     }
   }
