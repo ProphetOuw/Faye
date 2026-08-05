@@ -16,8 +16,8 @@ local Threader = require(Faye)
 local Thread = Threader();
 ```
 You will most likely use this for all of your components as it wraps the **Faye** features and automatically add them to the cleaner to be cleaned when it&#x27;s necessary."><link data-rh="true" rel="canonical" href="https://ouw2204.github.io/Faye/api/Thread"><link data-rh="true" rel="alternate" href="https://ouw2204.github.io/Faye/api/Thread" hreflang="en"><link data-rh="true" rel="alternate" href="https://ouw2204.github.io/Faye/api/Thread" hreflang="x-default"><link rel="stylesheet" href="/Faye/assets/css/styles.7637c994.css">
-<script src="/Faye/assets/js/runtime~main.748198d1.js" defer="defer"></script>
-<script src="/Faye/assets/js/main.6e8dcd98.js" defer="defer"></script>
+<script src="/Faye/assets/js/runtime~main.2df0047f.js" defer="defer"></script>
+<script src="/Faye/assets/js/main.a42dd9d4.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -50,7 +50,7 @@ You will most likely use this for all of your components as it wraps the **Faye*
 <p>Creates an animation object with the specified goal, info, and optional modifications.</p>
 </div><div class="divider_rE5g"></div><h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="Configure"><code style="text-decoration:none">Configure</code><a href="#Configure" class="hash-link" aria-label="Direct link to Configure" title="Direct link to Configure" translate="no">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/ouw2204/Faye/blob/master/src/Configure.luau#L14"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Thread<!-- -->:</code><code class="green_DgR4">Configure</code><code>(</code><code>Entity<!-- -->: </code><code class="blue_P4bS">any</code><code>) → </code><code class="blue_P4bS">function</code></div><div>
 <p><a href="/Faye/docs/Instancing/Create">Allows configuration on an existing physical or none physical component.</a> Inherits method from <a href="/Faye/api/Create">Create</a>.</p>
-</div><div class="divider_rE5g"></div><h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="Create"><code style="text-decoration:none">Create</code><a href="#Create" class="hash-link" aria-label="Direct link to Create" title="Direct link to Create" translate="no">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/ouw2204/Faye/blob/master/src/Create/init.luau#L13"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Thread<!-- -->:</code><code class="green_DgR4">Create</code><code>(</code><code>ClassName<!-- -->: </code><code class="blue_P4bS">string</code><code>) → </code><code class="purple_ieR2">(</code><code>props<!-- -->: </code><code class="blue_P4bS">PropertyTypes.Property</code><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="blue_P4bS">Create</code></div><div>
+</div><div class="divider_rE5g"></div><h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="Create"><code style="text-decoration:none">Create</code><a href="#Create" class="hash-link" aria-label="Direct link to Create" title="Direct link to Create" translate="no">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/ouw2204/Faye/blob/master/src/Create/init.luau#L13"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Thread<!-- -->:</code><code class="green_DgR4">Create</code><code>(</code><code>ClassName<!-- -->: </code><code class="blue_P4bS">CreatableClassName</code><code class="op_lSLc"> | </code><code class="blue_P4bS">string</code><code>) → </code><code class="purple_ieR2">(</code><code>props<!-- -->: </code><code class="blue_P4bS">PropertyTypes.Property</code><code class="purple_ieR2">)</code><code class="purple_ieR2"> → </code><code class="blue_P4bS">Create</code></div><div>
 <p><a href="/Faye/docs/Instancing/Create">Creates a new instance object.</a></p>
 </div><div class="divider_rE5g"></div><h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="DelayProperty"><code style="text-decoration:none">DelayProperty</code><a href="#DelayProperty" class="hash-link" aria-label="Direct link to DelayProperty" title="Direct link to DelayProperty" translate="no">​</a></h3><div class="repositoryDetailsContainer_BPdw"><a class="sourceButton_sEho" href="https://github.com/ouw2204/Faye/blob/master/src/DelayProperty.luau#L13"><div class="sourceButtonText_Vh0m">&lt;/&gt;</div></a></div><div class="memberString_GwaU"><code>Thread<!-- -->:</code><code class="green_DgR4">DelayProperty</code><code>(</code><div class="inset_uKQm"><div><code>Props<!-- -->: </code><code class="blue_P4bS">Types.Properties</code><code>,</code></div><div><code>Time<!-- -->: </code><code class="blue_P4bS">number</code><code>,</code></div><div><code>From<!-- -->: </code><code class="blue_P4bS">any</code></div></div><code>) → </code><code class="blue_P4bS">DelayProperty</code></div><div>
 <p>Creates a new delay object that will compile the given properties after [Time] time.</p>
@@ -259,7 +259,7 @@ You will most likely use this for all of your components as it wraps the **Faye*
                 {
                     &quot;name&quot;: &quot;ClassName&quot;,
                     &quot;desc&quot;: &quot;&quot;,
-                    &quot;lua_type&quot;: &quot;string&quot;
+                    &quot;lua_type&quot;: &quot;CreatableClassName | string&quot;
                 }
             ],
             &quot;returns&quot;: [

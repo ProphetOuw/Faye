@@ -99,6 +99,16 @@ Thread:Create "Frame" {
 }
 ```
 
+Like `OnClean`, it also accepts a [props table directly](#passing-a-props-table-directly) instead of a function:
+
+```lua
+Thread:Create "Frame" {
+    CleanFunction = {
+        BackgroundColor3 = Color3.new(1, 0, 0) -- applied during cleanup
+    }
+}
+```
+
 :::info
 When you use `OnClean` together with `CleanDelay`, the `OnClean` is internally treated as a `CleanFunction`. Use `OnClean` alone if you want Faye to automatically wait for animations to finish.
 :::
