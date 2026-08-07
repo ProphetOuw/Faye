@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 ---
-# Instance Events and Utilties
+# Instance Events and Utilities
 ### Basics
 Placing events in the props tables, will connect the listener
 ```lua
@@ -11,7 +11,7 @@ Placing events in the props tables, will connect the listener
     end
 }
 ```
-The first parameter of the events is always the Instance being worked on and following is all the other parameters
+The first parameter of the events is always the Instance being worked on, followed by all the other parameters
 ```lua
 {
     Touched = function(Entity, PartTouched)
@@ -20,11 +20,11 @@ The first parameter of the events is always the Instance being worked on and fol
 }
 ```
 :::note
-Yes i am using an event reserved for parts, you can create anything with Faye.
+Yes, I am using an event reserved for parts, you can create anything with Faye.
 :::
 Utilities help you implement special properties, reactivity, and animations to your Faye Instances. Utilities also work on Instances that are Configured using the Configure function.
 ### GetSignal Utility
-The **GetSignal** utility allows you to listen to complex instance events like, GetAttributeChangedSignal, GetPropertyChangedSignal, etc...
+The **GetSignal** utility allows you to listen to complex instance events like GetAttributeChangedSignal, GetPropertyChangedSignal, etc...
 ```lua
 {
     [Thread:GetSignal("GetPropertyChangedSignal","Size")] = function(Entity)
@@ -33,7 +33,7 @@ The **GetSignal** utility allows you to listen to complex instance events like, 
     end,
 }
 ```
-Its important to remember that complex roblox instance events don't return any parameters, so the only one that will be there is the one Faye automatically adds there which is the Entity in the first parameter position.
+It's important to remember that complex roblox instance events don't return any parameters, so the only one that will be there is the one Faye automatically adds there which is the Entity in the first parameter position.
 
 #### More GetSignal examples
 ```lua

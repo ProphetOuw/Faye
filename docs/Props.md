@@ -46,4 +46,4 @@ You can also set properties to functions
 }
 
 ```
-You can nest Props tables as much as you want and u can have as many functions as you want into them.
+You can nest Props tables as much as you want and you can have as many functions as you want in them.

@@ -64,17 +64,17 @@ return function(Parent: Instance)
 
     return function()
         Thread:Destroy();
-    end)
-end)
+    end
+end
 ```
-The Thread allows you to keep track of what you create and allow you to clean everthing with one function. It is not needed, you can use Faye without a Thread as seen below
+The Thread allows you to keep track of what you create and lets you clean everything with one function. It is not needed, you can use Faye without a Thread as seen below
 ```lua
 local Create = require(Faye.Create)
 return function(Parent: Instance)
     Create(...)
-end)
+end
 ```
-You can reuse some some Utilities, but a minority of them can't be reused, like the *Create* function, which creates a new Faye Instance, Faye Instances are unique due to the reactivity, so they can't be cloned and this is where the component system you might be familiar with comes in.
+You can reuse some Utilities, but a minority of them can't be reused, like the *Create* function, which creates a new Faye Instance. Faye Instances are unique due to the reactivity, so they can't be cloned and this is where the component system you might be familiar with comes in.
 ```lua
 local EmptyFrame = function()
     return Create(...)

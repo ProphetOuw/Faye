@@ -17,7 +17,7 @@ local AnimInfo = Info( -- or Thread.Info or Faye.Info
     Reverse: boolean?,
     DelayTime: number?
 )
-local AnimSpringInfo = SpringInfo( -- or Thread.SpringInfo or Faye.Info
+local AnimSpringInfo = SpringInfo( -- or Thread.SpringInfo or Faye.SpringInfo
     Time: number?,
     Frequency: number?, -- frequency
     Damping: number?, --loss of energy
@@ -26,7 +26,7 @@ local AnimSpringInfo = SpringInfo( -- or Thread.SpringInfo or Faye.Info
     DelayTime: number?
 )
 ```
-These are similar to to TweenService's TweenInfo, with an Addition of **SpringInfo**, If you want to Use Springs instead of the plain roblox easings you substitute the Info with a SpringInfo when creating an animation, its that easy.
+These are similar to TweenService's TweenInfo, with the addition of **SpringInfo**. If you want to use Springs instead of the plain roblox easings you substitute the Info with a SpringInfo when creating an animation, it's that easy.
 :::note
 If you leave any empty fields, it will automatically fill it with default values. You can also use a table for the info, these 'Info' and 'SpringInfo' functions just help you structure it with suggestions
 :::
@@ -37,7 +37,7 @@ local Modifications = {
 	FirstDelayTime: number?; -- the DelayTime for the first play
 	FirstInfo: (Info | SpringInfo)?; -- the Info for the first play
 	From: any; -- makes it so the animation starts from this once
-	AlwaysFrom: any; --makes it so the animation always start from this
+	AlwaysFrom: any; --makes it so the animation always starts from this
 }
 ```
 These are self explanatory and allow you to have special modifications for your animations
@@ -67,7 +67,7 @@ end
 ```
 ![Gif](https://gyazo.com/9cfa4070d03658f6c98b4f10b85c63de.gif)
 
-Rather than our goal, we can substitute it with a Faye Value, and everytime we update it, our Frame will react to its change
+Rather than our goal, we can substitute it with a Faye Value, and every time we update it, our Frame will react to its change
 ```lua
 local Goal = Thread:Value(Color3.new(1,1,0))
 Thread:Create "Frame" {
@@ -84,10 +84,10 @@ Thread:Create "Frame" {
 ```
 ![Gif](https://gyazo.com/c6b601305261de58015af47f4ee6f1b2.gif)
 :::note
-When using Faye values as Goal, the animation won't tween to the goal for the first iteration, it will always set the Instance's property to the Goal's initial value first, so if you want it to tween it to, you must specify the From in the Animation modifications table, then it will tween to the Goal rather than setting the object's property on initialization.
+When using Faye values as Goal, the animation won't tween to the goal for the first iteration, it will always set the Instance's property to the Goal's initial value first, so if you want it to tween, you must specify the From in the Animation modifications table, then it will tween to the Goal rather than setting the object's property on initialization.
 :::
 ### Modifying already created Animations
-Lets say you cloned an animation using table.clone and want to add special modifications to it, you can use the ModifyAnimation utility
+Let's say you cloned an animation using table.clone and want to add special modifications to it, you can use the ModifyAnimation utility
 ```lua
 local Anim = Thread:Animation(Color3.new(1,0,0),Info)
 local AnimClone = table.clone(Anim)
@@ -103,7 +103,7 @@ Thread:Create "Frame" {
 }
 ```
 ## Quick animations
-If you just want to play animations and you don't want to setup reactivity, you can use the Faye's LoadAnimation utility, use it within a thread for the Thread to manage cleaning, but its not necessary, You can use it in any script in ur game.
+If you just want to play animations and you don't want to set up reactivity, you can use Faye's LoadAnimation utility. Use it within a thread for the Thread to manage cleaning, but it's not necessary, you can use it in any script in your game.
 ```lua
 Thread:LoadAnimation(  Entity  ,  {Size = UDim2.fromOffset(200,200)}  ,  Thread.Info(.2)  ):Play()
 ```
