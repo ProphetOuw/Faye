@@ -4,11 +4,11 @@ local typetxt = script.Name;
     @method Iterate
     @within Thread
     @param Tab any
-    @param Func (Index: any, Value: any, InnerThread: Thread?, Entity: Instance?) -> ()
+    @param Func (Index: any, Value: any, Thread: Thread?, Entity: Instance?) -> ()
     @return Iterate
     Creates a reactive iterator, when the value changes it refreshes the entire thing.
 ]=]
-return function(Tab: any,Func: (Index: any,Value: any,InnerThread: Types.Thread?,Entity: Instance?) -> (),Thread: Types.Thread)
+return function(Tab: any,Func: (Index: any,Value: any,Thread: Types.Thread?,Entity: Instance?) -> (),Thread: Types.Thread)
     local Iterate = {
         Tab = Tab,
         Function = Func,

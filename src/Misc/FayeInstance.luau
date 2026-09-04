@@ -13,7 +13,7 @@ local animtxt = "Animation"
 local lerptxt = "Lerp"
 --Animations/Lerps in a direct props table were registered on the creating thread at build
 --time; mark them so that thread's cleanup sweep skips them - they now belong to the
---InnerThread compile and would otherwise be killed mid exit-animation
+--CleanThread compile and would otherwise be killed mid exit-animation
 local function MarkCleanDescriptors(t)
 	for _, v in pairs(t) do
 		if tof(v) == tabletxt then
@@ -157,9 +157,9 @@ function mt:Compile()
 	local Props = self.Props
 	if Props ~= nil then
 		local AddClean = nil
-		local ThreadUsing = self.InnerThread or self.Thread;
+		local ThreadUsing = self.CleanThread or self.Thread;
 		local PropsOrCleanCheck = Props.CleanDelay ~= nil or Props.OnClean ~= nil
-		if (ThreadUsing ~= nil and (ThreadUsing._hc or ThreadUsing._isCleanAncestor) ) and PropsOrCleanCheck and self.InnerThread ~= nil and self.InnerThread._isCleanAncestor and ThreadUsing.ParentThread ~= nil then
+		if (ThreadUsing ~= nil and (ThreadUsing._hc or ThreadUsing._isCleanAncestor) ) and PropsOrCleanCheck and self.CleanThread ~= nil and self.CleanThread._isCleanAncestor and ThreadUsing.ParentThread ~= nil then
 			if Props.CleanFunction == nil and Props.OnClean ~= nil then
 				AddClean = true;
 				Props.CleanFunction = Props.OnClean
@@ -172,9 +172,9 @@ function mt:Compile()
 					self.Thread._hc = true --hc = hasclean
 					self.Thread._isCleanAncestor = true
 				end
-				if self.InnerThread == nil then
-					self.InnerThread = (self.Thread ~= nil and self.Thread:Extend(true)) or {}
-					self.InnerThread._isCleanAncestor = true
+				if self.CleanThread == nil then
+					self.CleanThread = (self.Thread ~= nil and self.Thread:Extend(true)) or {}
+					self.CleanThread._isCleanAncestor = true
 				end
 
 				if Props.CleanDelay ~= nil then
@@ -207,7 +207,7 @@ function mt:Compile()
 			if (self.Thread ~= nil and self.Thread._isCleanAncestor) and self.CleanDelay == nil then
 				local f = Props.CleanFunction
 				local connected;
-				local InnerThread = self.InnerThread or self.Thread;
+				local CleanThread = self.CleanThread or self.Thread;
 				local Instance = self.Instance;
 				local cf; cf = function()
 					if f == nil then
@@ -216,7 +216,7 @@ function mt:Compile()
 					if self.Cache ~= nil then
 						self:ClearCache()
 					end
-					local res1,res2 = RunClean(f, InnerThread, Instance)
+					local res1,res2 = RunClean(f, CleanThread, Instance)
 					repCompile(res1,res2,self)
 					removefunc(connected,cf)
 					f = nil
@@ -337,13 +337,13 @@ function mt:Destroy()
 			end
 		end
 	end
-	if not Removed and self.InnerThread ~= nil then
-		if self.InnerThread["Remove"] then
-			self.InnerThread:Remove(self)
+	if not Removed and self.CleanThread ~= nil then
+		if self.CleanThread["Remove"] then
+			self.CleanThread:Remove(self)
 		else
-			local Find = tf(self.InnerThread, self)
+			local Find = tf(self.CleanThread, self)
 			if Find ~= nil then
-				tr(self.InnerThread, Find)
+				tr(self.CleanThread, Find)
 			end
 		end
 	end
@@ -356,27 +356,27 @@ function mt:Destroy()
 
 	--| clean function
 	if self.CleanFunction ~= nil then
-		local res1,res2 = RunClean(self.CleanFunction, self.InnerThread or self.Thread, self.Instance)
+		local res1,res2 = RunClean(self.CleanFunction, self.CleanThread or self.Thread, self.Instance)
 		repCompile(res1,res2,self)
 	end
 	--|> clean function
 
 	
 	if self.OnClean ~= nil then
-		if self.InnerThread["Add"] then
-			self.InnerThread:Add(self.Instance)
+		if self.CleanThread["Add"] then
+			self.CleanThread:Add(self.Instance)
 		else
-			table.insert(self.InnerThread, self.Instance)
+			table.insert(self.CleanThread, self.Instance)
 		end
-		local res1,res2 = RunClean(self.OnClean, self.InnerThread, self.Instance)
+		local res1,res2 = RunClean(self.OnClean, self.CleanThread, self.Instance)
 		repCompile(res1,res2,self)
-		if self.InnerThread ~= nil then
-			if self.InnerThread.AnimationsAmount == nil or self.InnerThread.AnimationsAmount <= 0 then
-				Clean(self.InnerThread)
+		if self.CleanThread ~= nil then
+			if self.CleanThread.AnimationsAmount == nil or self.CleanThread.AnimationsAmount <= 0 then
+				Clean(self.CleanThread)
 			else
-				self.InnerThread.CleanWhenDone = true
+				self.CleanThread.CleanWhenDone = true
 			end
-			self.InnerThread = nil
+			self.CleanThread = nil
 		end
 		self.Instance = nil
 		self.OnClean = nil
@@ -384,16 +384,16 @@ function mt:Destroy()
 		if self.CleanDelay ~= nil then
 			local delaytime = self.CleanDelay
 			if tof(delaytime) == functiontxt then
-				delaytime = delaytime(self.InnerThread,self.Instance)
+				delaytime = delaytime(self.CleanThread,self.Instance)
 			end
 
 			task.delay(delaytime, function()
 				self.Instance:Destroy()
 				self.Instance = nil
-				Clean(self.InnerThread)
+				Clean(self.CleanThread)
 				self.CleanFunction = nil
 				self.OnClean = nil
-				self.InnerThread = nil
+				self.CleanThread = nil
 			end)
 			self.CleanDelay = nil
 		else
@@ -401,7 +401,7 @@ function mt:Destroy()
 			self.Instance = nil
 			self.CleanFunction = nil
 			self.OnClean = nil
-			self.InnerThread = nil
+			self.CleanThread = nil
 		end
 	end
 	self.CleanDelay = nil

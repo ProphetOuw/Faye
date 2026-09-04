@@ -17,14 +17,14 @@ local GetSignalstr = "GetSignal"
 -- Caches whether `<ClassName>.<propName>` resolves to an RBXScriptSignal so we don't
 -- pay a real Roblox property read on every unknown key in the slow path.
 local signalCache = {}
-local function Recursive(Entity: {Instance: any, Thread: any, InnerThread: any}, Props: any,InstanceThread: any)
+local function Recursive(Entity: {Instance: any, Thread: any, CleanThread: any}, Props: any,InstanceThread: any)
     -- Main loop
     if Props[BeforeTxt] then
         local Beforetype = to(Props.Before)
         if Beforetype == functionstr then
             local r1,r2 = Props.Before(Entity.Instance)
             if r1 ~= nil then
-                UseCompile(Recursive, r1,r2,Entity,Entity.InnerThread or Entity.Thread)
+                UseCompile(Recursive, r1,r2,Entity,Entity.CleanThread or Entity.Thread)
             end
         elseif Beforetype == tablestr then
             Recursive(Entity, Props.Before,InstanceThread)
@@ -83,7 +83,7 @@ local function Recursive(Entity: {Instance: any, Thread: any, InnerThread: any},
             if tov == functionstr and toi == numberstr then
                 local ret,ret2 = v(Inst)
                 if ret then
-                    UseCompile(Recursive, ret,ret2,Entity,Entity.InnerThread or Entity.Thread)
+                    UseCompile(Recursive, ret,ret2,Entity,Entity.CleanThread or Entity.Thread)
                 end
             else
                 local onChangedIndex = sf(i, OnChangedstr, 1, true)
@@ -135,7 +135,7 @@ local function Recursive(Entity: {Instance: any, Thread: any, InnerThread: any},
         if aftertype == functionstr then
             local r1,r2 = Props.After(Entity.Instance)
             if r1 ~= nil then
-                UseCompile(Recursive,r1,r2,Entity,Entity.InnerThread or Entity.Thread)
+                UseCompile(Recursive,r1,r2,Entity,Entity.CleanThread or Entity.Thread)
             end
         elseif aftertype == tablestr then
             Recursive(Entity, Props.After,InstanceThread)
@@ -144,6 +144,6 @@ local function Recursive(Entity: {Instance: any, Thread: any, InnerThread: any},
     --tc(Props)
 end
 
-return function(Entity: {Instance: Instance, Thread: any, InnerThread: any}, Props: {},...)
+return function(Entity: {Instance: Instance, Thread: any, CleanThread: any}, Props: {},...)
     Recursive(Entity, Props,...)
 end

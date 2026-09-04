@@ -3,7 +3,7 @@ local Utility = require(script.Parent.Parent.Parent.Misc.FayeUtility)
 
 
 return function (Instance: Types.FayeInstance,Index, Signal: Types.Signal)
-    local Thread = Instance.InnerThread or Instance.Thread;
+    local Thread = Instance.CleanThread or Instance.Thread;
     local Entry = {Instance = Instance, Index = (Utility.tof(Index) ~= Utility.numbertxt and Index) or nil}
     local EqThread
     local Delete; Delete = function()

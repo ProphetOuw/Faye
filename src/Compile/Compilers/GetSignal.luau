@@ -4,7 +4,7 @@ local tins = table.insert
 local Utility = require(script.Parent.Parent.Parent.Misc.FayeUtility)
 return function (Entity: Types.FayeInstance, Index: any, Value: Types.Value,Compile: (Entity: Types.FayeInstance, Props: {[any]: any},...any) -> () )
     local Instance = Entity.Instance
-    local Thread = Entity.InnerThread or Entity.Thread;
+    local Thread = Entity.CleanThread or Entity.Thread;
     local Signal = Instance[Index.Method](Instance,Index.Index)
     local func = function(...)
         if Thread ~= nil and not Thread.IsActive then print("Thread is no longer active"); return end;

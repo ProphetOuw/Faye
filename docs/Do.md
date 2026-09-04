@@ -28,10 +28,10 @@ State uses a rinse and repeat like system, so it will clean the last session bef
 ```lua
 local Value = Thread:Value(false)
 Thread:Create "TextLabel" {
-    Thread:State(function(Grab, InnerThread, Entity)
+    Thread:State(function(Grab, Thread, Entity)
         local CurrentValue = Grab(Value)
         if CurrentValue then
-            return InnerThread:Create "Frame" {
+            return Thread:Create "Frame" {
                 ...
             }
         else
@@ -42,7 +42,7 @@ Thread:Create "TextLabel" {
     end)
 }
 ```
-<mark>**Everything created within the State utility must be created using the InnerThread provided on the 2nd parameter**</mark> otherwise it won't clean previous sessions properly.
+<mark>**Everything created within the State utility must be created using the Thread provided on the 2nd parameter**</mark> otherwise it won't clean previous sessions properly.
 
 :::warning
 If the parent instance has `OnClean` or `CleanDelay`, instances built by State are destroyed instantly when cleanup starts - they don't wait for the parent's exit animation. Give the topmost instance you return its own `CleanDelay` to keep it visible during the parent's exit. See [Cleanup](/docs/Cleanup#iterate-and-state-children-during-cleanup) for details. (`Do` is unaffected since it doesn't own session instances.)

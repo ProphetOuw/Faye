@@ -45,7 +45,7 @@ local Independent = Parent:Extend(true)
 
 Independent:Create "Frame" {
     Parent = someGui,
-    OnClean = function(InnerThread, Entity)
+    OnClean = function(Thread, Entity)
         -- This cleanup function registers with Parent (via ParentThread traversal)
         -- It WILL run when Parent is destroyed
         print("Cleaning up")

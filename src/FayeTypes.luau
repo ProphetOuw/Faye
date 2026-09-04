@@ -19,7 +19,7 @@ export type Value = {
 }
 export type FayeInstance = {
 	Props: {[any]: any}?;
-	Instance: Instance, Thread: Thread?, InnerThread: Thread?,
+	Instance: Instance, Thread: Thread?, CleanThread: Thread?,
 	SetAttribute: (self: FayeInstance,Name: string,Value: any) -> FayeInstance,
 	GetAttribute: (self: FayeInstance,Name: string) -> any,
 	GetAttributes: (self: FayeInstance) -> {[string]: any};
@@ -498,8 +498,8 @@ export type Thread = {
     Connect: (self: Thread, Connection: RBXScriptSignal, func: (...any) -> ()) -> RBXScriptConnection,
     Do: (self: Thread, func : (Grab: (Value: Instance | Value) -> any,Thread: Thread, Entity: Instance?) -> ()) -> any;
     State: (self: Thread, func : (Grab: (Value: Instance | Value) -> any,Thread: Thread, Entity: Instance?) -> ()) -> any;
-    Iterate: (self: Thread, Table: any,func: (Index: any,Value: any,InnerThread: Thread?,Entity: Instance?) -> ()) -> ();
-	AdvancedIterate: (self: Thread, Table: any,func: (Index: any,Value: any,InnerThread: Thread?,Entity: Instance?) -> ()) -> ();
+    Iterate: (self: Thread, Table: any,func: (Index: any,Value: any,Thread: Thread?,Entity: Instance?) -> ()) -> ();
+	AdvancedIterate: (self: Thread, Table: any,func: (Index: any,Value: any,Thread: Thread?,Entity: Instance?) -> ()) -> ();
     InstancePropertySync: (self:Thread, Entity: Instance, Property: string) -> Value;
     InstanceAttributeSync: (self:Thread, Entity: Instance, Attribute: string) -> Value;
     DelayValue: (self: Thread, Value: Value?, Time: number?) -> DelayValue;
@@ -523,7 +523,7 @@ export type Thread = {
 	Reactive: (self: Thread, func: (Grab: (Value: Instance | Value) -> any) -> ()) -> ();
 	CloneTable: (Table: {[any]: any}, cloneFunction: ((Index: any, Value: any) -> (any, any))?) -> {[any]: any};
 	Debris: (self: Thread, Item: any, Lifetime: number) -> ();
-	SpecialThread: (self:Thread, func: (InnerThread: Thread, Entity: Instance) -> (),Params: (SpecialThreadParams | number)?) -> ();
+	SpecialThread: (self:Thread, func: (Thread: Thread, Entity: Instance) -> (),Params: (SpecialThreadParams | number)?) -> ();
 }
 
 export type Properties = {
@@ -631,8 +631,8 @@ ResetOnSpawn: any;
 	Focus: any,
 
 	CleanDelay: any,
-	CleanFunction: (((InnerThread: Thread, Entity: Instance) -> Properties?) | Properties)?,
-	OnClean: (((InnerThread: Thread, entity: Instance) -> Properties?) | Properties)?, -- replaces clean function
+	CleanFunction: (((Thread: Thread, Entity: Instance) -> Properties?) | Properties)?,
+	OnClean: (((Thread: Thread, entity: Instance) -> Properties?) | Properties)?, -- replaces clean function
 	-- Generic Instance Properties
 	Archivable: any,
 

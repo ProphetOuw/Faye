@@ -10,7 +10,7 @@ local m = {
 		end
 	end,
 	YieldSafe = function(Entity, Index, Value, Compile)
-		local Thread = Entity.InnerThread or Entity.Thread;
+		local Thread = Entity.CleanThread or Entity.Thread;
 		local taskthread;
 		local Yielded = false;
 		local mainFunc = function()
@@ -50,10 +50,10 @@ local m = {
 	Instance = function(Entity, Index, Value, Compile, From)
 		local Props = Value.Props
 		local Thread = Entity.Thread
-		local InnerThread = Entity.InnerThread
+		local CleanThread = Entity.CleanThread
 		if Props ~= nil then
 			--#thu 17 2025
-			if InnerThread ~= nil and InnerThread ~= Thread and ((Value.Props.OnClean == nil and Value.Props.CleanDelay == nil) or InnerThread._isCleanAncestor) then
+			if CleanThread ~= nil and CleanThread ~= Thread and ((Value.Props.OnClean == nil and Value.Props.CleanDelay == nil) or CleanThread._isCleanAncestor) then
 				if Thread["Remove"] then
 					Thread:Remove(Value)
 				else
@@ -62,12 +62,12 @@ local m = {
 						tr(Thread, pos)
 					end
 				end
-				if InnerThread["Add"] then
-					InnerThread:Add(Value)
+				if CleanThread["Add"] then
+					CleanThread:Add(Value)
 				else
-					tins(InnerThread, Value)
+					tins(CleanThread, Value)
 				end
-				Value.InnerThread = InnerThread
+				Value.CleanThread = CleanThread
 			end
 			if Props.Parent == nil then
 				Props.Parent = Entity.Instance
@@ -77,7 +77,7 @@ local m = {
 	end,
 	OnChanged = function(Entity, Index, Value, Compile, Init)
 		local Instance = Entity.Instance
-		local Thread = Entity.InnerThread or Entity.Thread;
+		local Thread = Entity.CleanThread or Entity.Thread;
 		if Init == true then
 			local Ret,Ret2 = Value(Instance, Instance[Index])
 			if Ret ~= nil then
@@ -100,7 +100,7 @@ local m = {
 	end,
 	GetSignal = require(script.GetSignal);
 	EventCompiler = function(Entity, Index, Value, Compile)
-		local Thread = Entity.InnerThread or Entity.Thread;
+		local Thread = Entity.CleanThread or Entity.Thread;
 		local Instance = Entity.Instance;
 		local Signal = Instance[Index]
 		local func = function(...)

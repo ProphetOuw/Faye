@@ -226,7 +226,7 @@ function mt:Remove(Entity: any)
 end
 --Do
 local Do = require(script.Do)
-function mt:Do(Function: (Grab: any,InnerThread: Types.Thread, Entity: Instance?) -> ())
+function mt:Do(Function: (Grab: any,Thread: Types.Thread, Entity: Instance?) -> ())
     return Do(Function)
 end
 --Do
@@ -237,17 +237,17 @@ end
 
 --State
 local State = require(script.State)
-function mt:State(Function: (Grab: any, InnerThread: Types.Thread,Entity: Instance?) -> ())
+function mt:State(Function: (Grab: any, Thread: Types.Thread,Entity: Instance?) -> ())
     return State(Function)
 end
 --Iterate
 local Iterate = require(script.Iterate)
-function mt:Iterate(Table: any, Function: (Index: any,Value: any,InnerThread: Types.Thread?,Entity: Instance?) -> ())
+function mt:Iterate(Table: any, Function: (Index: any,Value: any,Thread: Types.Thread?,Entity: Instance?) -> ())
     return Iterate(Table,Function,self)
 end
 --AdvancedIterate
 local AdvancedIterate = require(script.AdvancedIterate)
-function mt:AdvancedIterate(Table: any, Function: (Index: any,Value: any,InnerThread: Types.Thread?,Entity: Instance?) -> ())
+function mt:AdvancedIterate(Table: any, Function: (Index: any,Value: any,Thread: Types.Thread?,Entity: Instance?) -> ())
     return AdvancedIterate(Table,Function)
 end
 --Delay value

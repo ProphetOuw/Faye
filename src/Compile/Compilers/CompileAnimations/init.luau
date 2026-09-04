@@ -12,7 +12,7 @@ local Lerps = require(script.Lerps)
 local AnimatorStorage = require(script.Player.AnimatorStorage)
 
 return function(Entity: Types.FayeInstance, Index: string, Anim: Types.Animation)
-   local Thread = Entity.InnerThread or Entity.Thread;
+   local Thread = Entity.CleanThread or Entity.Thread;
    local PropertyType = Utility.tof(Entity.Instance[Index])
    if Anim.Loaded == true then
     --| run anims in parallel

@@ -3,7 +3,7 @@ local Utility = require(script.Parent.Parent.Parent.Misc.FayeUtility)
 
 local firsttxt = "is_first123"
 return function (Instance: Types.FayeInstance,Index, State: Types.Value,Compile: (Entity: Types.FayeInstance, Props: {[any]: any},...any) -> ())
-    local Thread = Instance.InnerThread or Instance.Thread;
+    local Thread = Instance.CleanThread or Instance.Thread;
     if State.IsState and (Thread == nil or Thread["Extend"] == nil) then
         warn("State only works if the entity has a thread and the thread has an :Extend method")
         return
@@ -13,35 +13,35 @@ return function (Instance: Types.FayeInstance,Index, State: Types.Value,Compile:
     local Grab,Trigger;
     local Delete;
     --| Trigger
-    local InnerThread;
+    local StateThread;
     Trigger = function(ft: string?)
-        if InnerThread ~= nil then
-            Utility.CallDestroy(InnerThread)
-            InnerThread = nil;
+        if StateThread ~= nil then
+            Utility.CallDestroy(StateThread)
+            StateThread = nil;
         end
         if State.IsState then
-            InnerThread = Thread:Extend(true);
+            StateThread = Thread:Extend(true);
         end
         
-        local res1,res2 = State.Func(Grab,InnerThread or Thread,Instance.Instance)
-        local Entity = (State.IsState and {Instance = Instance.Instance, Thread = InnerThread}) or Instance
+        local res1,res2 = State.Func(Grab,StateThread or Thread,Instance.Instance)
+        local Entity = (State.IsState and {Instance = Instance.Instance, Thread = StateThread}) or Instance
         if res1 ~= nil then
             if Index ~= nil and Utility.tof(Index) ~= Utility.numbertxt then
-                Compile(Entity,{[Index] = res1},InnerThread)
+                Compile(Entity,{[Index] = res1},StateThread)
             else
                 if res2 ~= nil then
-                    Compile(Entity,{[res1] = res2},InnerThread)
+                    Compile(Entity,{[res1] = res2},StateThread)
                 else
-                    Compile(Entity,{res1},InnerThread)
+                    Compile(Entity,{res1},StateThread)
                 end
             end
         else
             if ft == firsttxt and Log == nil then
                 Delete()
             else
-                if InnerThread ~= nil then
-                    Utility.CallDestroy(InnerThread)
-                    InnerThread = nil;
+                if StateThread ~= nil then
+                    Utility.CallDestroy(StateThread)
+                    StateThread = nil;
                 end
             end
             
@@ -79,9 +79,9 @@ return function (Instance: Types.FayeInstance,Index, State: Types.Value,Compile:
             Utility.RemoveFromThread(EqThread,Delete)
         end;
         Utility.RemoveFromEntity(Instance,Delete)
-        if InnerThread ~= nil then
-            Utility.CallDestroy(InnerThread)
-            InnerThread = nil;
+        if StateThread ~= nil then
+            Utility.CallDestroy(StateThread)
+            StateThread = nil;
         end
         if Log ~= nil then
             Utility.tc(Log);

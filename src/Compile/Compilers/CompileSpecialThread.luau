@@ -34,7 +34,7 @@ function  CompileFunc(Instance,NewThread: Types.Thread,ParentThread: Types.Threa
     end
 end
 return function (Instance: Types.FayeInstance,Index, SpecialThread: SpecialThread,Compile)
-    local ParentThread: Types.Thread = Instance.InnerThread or Instance.Thread;
+    local ParentThread: Types.Thread = Instance.CleanThread or Instance.Thread;
     if ParentThread == nil then return end;
     local NewThread = ParentThread:Extend(true)
     local Delete; Delete = function(remove)

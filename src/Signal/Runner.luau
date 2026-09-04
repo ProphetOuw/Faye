@@ -7,7 +7,7 @@ return function (new: {[any]: any}, Connections: RBXScriptSignal | {RBXScriptSig
             for i = 1,new.Entries.Count do
                 local Eq = new.Entries[i]
                 if Eq.Instance ~= nil and Eq.Instance.Thread ~= nil then
-                    local Thread = Eq.Instance.InnerThread or Eq.Instance.Thread
+                    local Thread = Eq.Instance.CleanThread or Eq.Instance.Thread
 
                     --| state
                     if Eq.Thread ~= nil then

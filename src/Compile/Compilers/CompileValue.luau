@@ -43,7 +43,7 @@ return function (Entity: Types.FayeInstance, Index: any, Value: Types.Value)
         end
     end
     mainFunc(Value)
-    local Thread = Entity.Innerthread or Entity.Thread
+    local Thread = Entity.CleanThread or Entity.Thread
     local ValueConnection
     local clean; clean = function()
         if ValueConnection ~= nil then

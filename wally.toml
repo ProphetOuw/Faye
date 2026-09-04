@@ -1,6 +1,6 @@
 [package]
 name = "ouw2204/faye"
-version = "2.5.3"
+version = "2.5.4"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 

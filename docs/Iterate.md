@@ -11,8 +11,8 @@ Iterate creates a reactive iterator that <mark>refreshes the entire list when th
 local Items = Thread:Value({"Apple", "Banana", "Cherry"})
 
 Thread:Create "Frame" {
-    Thread:Iterate(Items, function(Index, Value, InnerThread, Entity)
-        return InnerThread:Create "TextLabel" {
+    Thread:Iterate(Items, function(Index, Value, Thread, Entity)
+        return Thread:Create "TextLabel" {
             Text = Value,
             LayoutOrder = Index,
             Parent = Entity
@@ -24,7 +24,7 @@ Thread:Create "Frame" {
 The callback function receives:
 - **Index**: The current key/index in the table
 - **Value**: The current value at that index
-- **InnerThread**: A thread for creating instances (use this for proper cleanup)
+- **Thread**: A thread for creating instances (use this for proper cleanup)
 - **Entity**: The parent Roblox Instance
 
 You can return properties to compile, a single instance, or a table of instances.
@@ -39,8 +39,8 @@ You can also iterate over a number to create N items:
 local Count = Thread:Value(5)
 
 Thread:Create "Frame" {
-    Thread:Iterate(Count, function(Index, Value, InnerThread, Entity)
-        return InnerThread:Create "TextButton" {
+    Thread:Iterate(Count, function(Index, Value, Thread, Entity)
+        return Thread:Create "TextButton" {
             Text = `Button {Index}`,
             Parent = Entity
         }
@@ -59,8 +59,8 @@ local Players = Thread:Value({
 })
 
 Thread:Create "Frame" {
-    Thread:AdvancedIterate(Players, function(Index, Value, InnerThread, Entity)
-        return InnerThread:Create "TextLabel" {
+    Thread:AdvancedIterate(Players, function(Index, Value, Thread, Entity)
+        return Thread:Create "TextLabel" {
             Text = `{Value.Name}: {Value.Score}`,
             Parent = Entity
         }

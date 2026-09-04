@@ -10,7 +10,7 @@ return function (Compile: any,  res1: any,res2: any,Entity: Types.FayeInstance, 
 		NewCompile = {[res1] = res2}
 	end
 	if NewCompile ~= nil then
-		Compile(Entity, NewCompile, Thread or (Entity.InnerThread or Entity.Thread) )
+		Compile(Entity, NewCompile, Thread or (Entity.CleanThread or Entity.Thread) )
 	end;
 
 	NewCompile = nil;

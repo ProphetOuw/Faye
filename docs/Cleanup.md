@@ -8,17 +8,17 @@ Faye provides special props to control how instances are cleaned up.
 `OnClean` is called <mark>before the instance is destroyed</mark>. It behaves differently depending on whether `CleanDelay` is also present:
 
 ### OnClean without CleanDelay
-When used on its own, `OnClean` adds the instance to its InnerThread and <mark>waits for all animations in the InnerThread to finish before destroying</mark>. This is the recommended way to do cleanup animations.
+When used on its own, `OnClean` adds the instance to a dedicated clean thread (the `Thread` passed to the callback) and <mark>waits for all animations in that thread to finish before destroying</mark>. This is the recommended way to do cleanup animations.
 
 ```lua
 Thread:Create "Frame" {
     Parent = parent,
 
-    OnClean = function(InnerThread, Entity)
-        -- Entity is added to InnerThread automatically
+    OnClean = function(Thread, Entity)
+        -- Entity is added to this Thread automatically
         -- Faye waits for these animations to complete before destroying
         return {
-            BackgroundTransparency = InnerThread:Animation(1, Thread.Info(0.3))
+            BackgroundTransparency = Thread:Animation(1, Thread.Info(0.3))
         }
     end
 }
@@ -31,11 +31,11 @@ When both are present, <mark>`OnClean` becomes a `CleanFunction`</mark> - it run
 Thread:Create "Frame" {
     Parent = parent,
 
-    OnClean = function(InnerThread, Entity)
+    OnClean = function(Thread, Entity)
         -- This runs as a CleanFunction since CleanDelay is present
         -- Destruction timing is controlled by CleanDelay, not animations
         return {
-            BackgroundTransparency = InnerThread:Animation(1, Thread.Info(0.5))
+            BackgroundTransparency = Thread:Animation(1, Thread.Info(0.5))
         }
     end,
 
@@ -44,7 +44,7 @@ Thread:Create "Frame" {
 ```
 
 The callback receives:
-- **InnerThread**: A dedicated thread for cleanup operations
+- **Thread**: A dedicated thread for cleanup operations (see [Clean Thread](#clean-thread))
 - **Entity**: The Roblox Instance being cleaned
 
 ### Passing a props table directly
@@ -80,7 +80,7 @@ You can also pass a function to calculate the delay:
 Thread:Create "Frame" {
     Parent = parent,
 
-    CleanDelay = function(InnerThread, Entity)
+    CleanDelay = function(Thread, Entity)
         -- Calculate delay based on some condition
         return Entity.AbsoluteSize.X > 100 and 1 or 0.5
     end
@@ -92,7 +92,7 @@ Thread:Create "Frame" {
 
 ```lua
 Thread:Create "Frame" {
-    CleanFunction = function(InnerThread, Entity)
+    CleanFunction = function(Thread, Entity)
         -- Runs during cleanup, but doesn't delay destruction
         print("Cleaning up")
     end
@@ -113,8 +113,8 @@ Thread:Create "Frame" {
 When you use `OnClean` together with `CleanDelay`, the `OnClean` is internally treated as a `CleanFunction`. Use `OnClean` alone if you want Faye to automatically wait for animations to finish.
 :::
 
-## InnerThread
-When you use `OnClean` or `CleanDelay`, Faye automatically creates an `InnerThread` for the instance. This thread:
+## Clean Thread
+When you use `OnClean` or `CleanDelay`, Faye automatically creates a dedicated clean thread for the instance and passes it as the `Thread` parameter of the callback. This thread:
 
 - Is a child of the main thread
 - Gets destroyed after the instance cleanup completes
@@ -124,11 +124,11 @@ When you use `OnClean` or `CleanDelay`, Faye automatically creates an `InnerThre
 Thread:Create "Frame" {
     Parent = parent,
 
-    OnClean = function(InnerThread, Entity)
-        -- InnerThread is automatically created
+    OnClean = function(Thread, Entity)
+        -- This Thread is the clean thread, automatically created
         -- Use it for cleanup animations/operations
 
-        InnerThread:Create "Frame" {
+        Thread:Create "Frame" {
             Parent = Entity,
             -- This child will also be cleaned properly
         }
@@ -143,11 +143,11 @@ When a thread is destroyed:
 2. **Regular items** are cleaned in reverse order (last added = first cleaned)
 3. **Child threads** are recursively cleaned
 4. **Instance cleanup** runs (`CleanFunction` if present, then `OnClean` if present)
-5. For `OnClean` without `CleanDelay`: waits for all InnerThread animations to finish, then destroys
+5. For `OnClean` without `CleanDelay`: waits for all animations in the clean thread to finish, then destroys
 6. For `CleanDelay`: waits the delay duration, then destroys
 
 ## Iterate and State children during cleanup
-`Iterate`, `AdvancedIterate` and `State` don't register their teardown on the instance's InnerThread - <mark>they walk up the `ParentThread` chain and register on the nearest ancestor thread with cleanup responsibility</mark>. (`Do` is unaffected - it runs on the parent's thread and doesn't own session instances.) This has an important consequence:
+`Iterate`, `AdvancedIterate` and `State` don't register their teardown on the instance's clean thread - <mark>they walk up the `ParentThread` chain and register on the nearest ancestor thread with cleanup responsibility</mark>. (`Do` is unaffected - it runs on the parent's thread and doesn't own session instances.) This has an important consequence:
 
 When a parent instance has `OnClean` or `CleanDelay`, the items built by an `Iterate` or `State` inside it are <mark>destroyed instantly the moment cleanup starts</mark> - they do **not** inherit the parent's exit animation or delay. The parent frame will fade out with its list items already gone.
 
@@ -157,14 +157,14 @@ To keep them on screen during the parent's exit, give the first ancestor each ca
 Thread:Create "Frame" {
     Parent = parent,
 
-    OnClean = function(InnerThread, Entity)
+    OnClean = function(Thread, Entity)
         return {
-            BackgroundTransparency = InnerThread:Animation(1, Faye.Info(0.3))
+            BackgroundTransparency = Thread:Animation(1, Faye.Info(0.3))
         }
     end,
 
-    Thread:Iterate(Items, function(Index, Value, InnerThread, Entity)
-        return InnerThread:Create "TextLabel" {
+    Thread:Iterate(Items, function(Index, Value, Thread, Entity)
+        return Thread:Create "TextLabel" {
             Text = Value,
             Parent = Entity,
             CleanDelay = 0.3 -- keeps this item alive while the parent fades out
@@ -200,9 +200,9 @@ local function Notification(message, duration)
             Text = message
         },
 
-        OnClean = function(InnerThread, Entity)
+        OnClean = function(Thread, Entity)
             return {
-                Position = InnerThread:Animation(
+                Position = Thread:Animation(
                     UDim2.new(1, 0, 0, 0),
                     Thread.Info(0.3)
                 )

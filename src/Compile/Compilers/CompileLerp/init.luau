@@ -18,7 +18,7 @@ return function (Entity: Types.FayeInstance, Index: any, Value: Types.Lerp)
         Value.Workers[Value.Workers.Count] = {Entity = Entity.Instance, Property = Index}
     else
         Value.Loaded = true;
-        local Thread = Entity.InnerThread or Entity.Thread;
+        local Thread = Entity.CleanThread or Entity.Thread;
         local id = Value.__lerpid;
         local goalConnectionsLength,goalConnections
         local InitialGoalType = FayeUtility.tof(Value.To)

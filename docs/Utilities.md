@@ -109,7 +109,7 @@ YieldSafe lets you <mark>safely use yielding functions in props tables</mark>. N
 
 ```lua
 Thread:Create "TextLabel" {
-    Thread:YieldSafe(function(InnerThread, Entity)
+    Thread:YieldSafe(function(Thread, Entity)
         local data = fetchDataFromServer() -- This yields
         return {
             Text = data.message
@@ -120,7 +120,7 @@ Thread:Create "TextLabel" {
 
 With optional delay before execution:
 ```lua
-Thread:YieldSafe(function(InnerThread, Entity)
+Thread:YieldSafe(function(Thread, Entity)
     return {Text = "Delayed!"}
 end, 2) -- Wait 2 seconds before running
 ```
@@ -162,7 +162,7 @@ SpecialThread creates a <mark>dedicated thread for a function with custom lifecy
 
 ```lua
 Thread:Create "Frame" {
-    Thread:SpecialThread(function(InnerThread, Entity)
+    Thread:SpecialThread(function(Thread, Entity)
         -- This runs in its own thread
         return {
             BackgroundColor3 = Color3.new(1, 0, 0)
